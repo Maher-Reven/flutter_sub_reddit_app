@@ -13,6 +13,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   late final ArticleProvider articleProvider = context.read<ArticleProvider>();
+  late final ArticleProvider articleProviderStream =
+      context.watch<ArticleProvider>();
+  final scrollController = ScrollController();
 
   @override
   void initState() {
@@ -22,12 +25,51 @@ class _HomePageState extends State<HomePage>
     _tabController.addListener(() {
       setState(() {});
     });
+    scrollController.addListener(() {
+      if (scrollController.position.maxScrollExtent ==
+          scrollController.offset) {
+        articleProvider.initModels();
+      }
+    });
   }
 
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  List<Widget> _tabBuilder() {
+    return <Widget>[
+      RefreshIndicator(
+        onRefresh: refresh,
+        child: articleProviderStream.isLoadingHotArticles
+            ? const Center(child: CircularProgressIndicator())
+            : ArticlesTab(
+                dataModels: articleProvider.hotArticles,
+              ),
+      ),
+      RefreshIndicator(
+        onRefresh: refresh,
+        child: articleProviderStream.isLoadingNewArticles
+            ? const Center(child: CircularProgressIndicator())
+            : ArticlesTab(
+                dataModels: articleProvider.newArticles,
+              ),
+      ),
+      RefreshIndicator(
+        onRefresh: refresh,
+        child: articleProviderStream.isLoadingRisingArticles
+            ? const Center(child: CircularProgressIndicator())
+            : ArticlesTab(
+                dataModels: articleProvider.risingArticles,
+              ),
+      ),
+    ];
+  }
+
+  Future refresh() async {
+    articleProvider.refresh();
   }
 
   late TabController _tabController;
@@ -60,17 +102,7 @@ class _HomePageState extends State<HomePage>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [
-          ArticlesTab(
-            dataModels: articleProvider.hotArticles,
-          ),
-          ArticlesTab(
-            dataModels: articleProvider.newArticles,
-          ),
-          ArticlesTab(
-            dataModels: articleProvider.risingArticles,
-          )
-        ],
+        children: _tabBuilder(),
       ),
     );
   }
