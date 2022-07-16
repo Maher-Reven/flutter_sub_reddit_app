@@ -25,12 +25,12 @@ class _HomePageState extends State<HomePage>
     _tabController.addListener(() {
       setState(() {});
     });
-    scrollController.addListener(() {
-      if (scrollController.position.maxScrollExtent ==
-          scrollController.offset) {
-        articleProvider.initModels();
-      }
-    });
+    // scrollController.addListener(() {
+    //   if (scrollController.position.maxScrollExtent ==
+    //       scrollController.offset) {
+    //     articleProvider.initModels();
+    //   }
+    // });
   }
 
   @override
@@ -43,26 +43,35 @@ class _HomePageState extends State<HomePage>
     return <Widget>[
       RefreshIndicator(
         onRefresh: refresh,
-        child: articleProviderStream.isLoadingHotArticles
-            ? const Center(child: CircularProgressIndicator())
-            : ArticlesTab(
-                dataModels: articleProvider.hotArticles,
-              ),
+        child:
+            articleProviderStream.isLoadingHotArticles == LoadingState.loading
+                ? const Center(child: CircularProgressIndicator())
+                : ArticlesTab(
+                    dataModels: articleProvider.hotArticles,
+                    loadMore: loadMore,
+                    articlesType: 'Hot',
+                  ),
       ),
       RefreshIndicator(
         onRefresh: refresh,
-        child: articleProviderStream.isLoadingNewArticles
-            ? const Center(child: CircularProgressIndicator())
-            : ArticlesTab(
-                dataModels: articleProvider.newArticles,
-              ),
+        child:
+            articleProviderStream.isLoadingNewArticles == LoadingState.loading
+                ? const Center(child: CircularProgressIndicator())
+                : ArticlesTab(
+                    dataModels: articleProvider.newArticles,
+                    loadMore: loadMore,
+                    articlesType: 'New',
+                  ),
       ),
       RefreshIndicator(
         onRefresh: refresh,
-        child: articleProviderStream.isLoadingRisingArticles
+        child: articleProviderStream.isLoadingRisingArticles ==
+                LoadingState.loading
             ? const Center(child: CircularProgressIndicator())
             : ArticlesTab(
                 dataModels: articleProvider.risingArticles,
+                loadMore: loadMore,
+                articlesType: 'Rising',
               ),
       ),
     ];
@@ -70,6 +79,31 @@ class _HomePageState extends State<HomePage>
 
   Future refresh() async {
     articleProvider.refresh();
+  }
+
+  Future<void> loadMore(String type) async {
+    switch (type) {
+      case 'Hot':
+        if (articleProvider.isLoadingHotArticles == LoadingState.loading) {
+          return;
+        }
+        await articleProvider.fetchHotArticles();
+        return;
+      case 'New':
+        if (articleProvider.isLoadingNewArticles == LoadingState.loading) {
+          return;
+        }
+        await articleProvider.fetchNewArticles();
+        return;
+      case 'Rising':
+        if (articleProvider.isLoadingRisingArticles == LoadingState.loading) {
+          return;
+        }
+        await articleProvider.fetchRisingArticles();
+        return;
+      default:
+        return;
+    }
   }
 
   late TabController _tabController;

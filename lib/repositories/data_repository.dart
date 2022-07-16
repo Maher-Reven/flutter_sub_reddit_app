@@ -5,11 +5,12 @@ import 'package:flutter_assignment/models/data_model.dart';
 import 'package:http/http.dart' as http;
 
 class DataRepository {
-  Future<List<DataModel>> getData(String type) async {
+  Future<List<DataModel>> getData(String type, {String afterValue = ''}) async {
     Category? result;
     try {
       final response = await http.get(
-        Uri.parse('https://www.reddit.com/r/FlutterDev/$type.json'),
+        Uri.parse(
+            'https://www.reddit.com/r/FlutterDev/$type.json?after=$afterValue'),
       );
       if (response.statusCode == 200) {
         final items = jsonDecode(response.body);
