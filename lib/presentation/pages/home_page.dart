@@ -18,6 +18,10 @@ class _HomePageState extends State<HomePage>
   void initState() {
     super.initState();
     articleProvider.initModels();
+    _tabController = TabController(vsync: this, length: 3);
+    _tabController.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
