@@ -42,13 +42,13 @@ class DataModel {
   final String title;
   final String body;
   final String url;
-  final DateTime creationTime;
+  // final DateTime creationTime;
 
   DataModel({
     required this.title,
     required this.body,
     required this.url,
-    required this.creationTime,
+    // required this.creationTime,
   });
 
   factory DataModel.fromServerMap(Map<String, dynamic> json) {
@@ -56,7 +56,7 @@ class DataModel {
       title: json['title'] ?? '',
       body: json['selftext'] ?? '',
       url: json['url'] ?? '',
-      creationTime: DateTime.parse(json['created_utc']),
+      // creationTime: DateTime.parse(json['created_utc']),
     );
   }
 }

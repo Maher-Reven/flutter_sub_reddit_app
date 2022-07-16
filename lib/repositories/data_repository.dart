@@ -24,8 +24,8 @@ class DataRepository {
     final List<DataModel>? dataModels =
         result?.data.children.map((Article article) => article.data).toList();
 
-    //sorting dataModels
-    dataModels?.sort((a, b) => a.creationTime.compareTo(b.creationTime));
+    // //sorting dataModels
+    // dataModels?.sort((a, b) => a.creationTime.compareTo(b.creationTime));
 
     return dataModels ?? [];
   }
