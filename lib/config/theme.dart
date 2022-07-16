@@ -6,6 +6,8 @@ class ThemeClass {
     scaffoldBackgroundColor: AppColors.lightGray,
     appBarTheme: const AppBarTheme(backgroundColor: Colors.white),
     cardColor: Colors.white,
+    indicatorColor: AppColors.customPurpule,
+    primaryColorLight: AppColors.cardBorder,
   );
 
   static ThemeData darkTheme = ThemeData(

@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage>
           preferredSize: const Size.fromHeight(kToolbarHeight),
           child: TabBar(
             controller: _tabController,
-            indicatorColor: Colors.deepPurple,
+            indicatorColor: Theme.of(context).indicatorColor,
             labelColor: Colors.black,
             tabs: const [
               Tab(
