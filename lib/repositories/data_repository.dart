@@ -5,7 +5,7 @@ import 'package:flutter_assignment/models/data_model.dart';
 import 'package:http/http.dart' as http;
 
 class DataRepository {
-  Future<List<DataModel>> getData(String type, {String afterValue = ''}) async {
+  Future<List<DataModel>> getData(String type, {dynamic afterValue}) async {
     Category? result;
     try {
       final response = await http.get(
@@ -25,8 +25,8 @@ class DataRepository {
     final List<DataModel>? dataModels =
         result?.data.children.map((Article article) => article.data).toList();
 
-    // //sorting dataModels
-    // dataModels?.sort((a, b) => a.creationTime.compareTo(b.creationTime));
+    //sorting dataModels
+    dataModels?.sort((a, b) => a.creationTime.compareTo(b.creationTime));
 
     return dataModels ?? [];
   }

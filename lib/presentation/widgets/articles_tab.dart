@@ -27,14 +27,15 @@ class ArticlesTab extends StatelessWidget {
         return false;
       },
       child: ListView.separated(
-          padding: const EdgeInsets.symmetric(vertical: 15),
-          itemBuilder: (context, index) => ArticleCard(
-                dataModel: dataModels[index],
-              ),
-          separatorBuilder: (context, index) => const SizedBox(
-                height: 10,
-              ),
-          itemCount: dataModels.length),
+        padding: const EdgeInsets.symmetric(vertical: 15),
+        itemBuilder: (context, index) => ArticleCard(
+          dataModel: dataModels[index],
+        ),
+        separatorBuilder: (context, index) => const SizedBox(
+          height: 10,
+        ),
+        itemCount: dataModels.length,
+      ),
     );
   }
 }

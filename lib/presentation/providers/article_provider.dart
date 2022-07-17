@@ -11,9 +11,9 @@ class ArticleProvider extends ChangeNotifier {
   LoadingState _isLoadingHotArticles = LoadingState.loading;
   LoadingState _isLoadingNewArticles = LoadingState.loading;
   LoadingState _isLoadingRisingArticles = LoadingState.loading;
-  String _afterHot = '';
-  String _afterNew = '';
-  String _afterRising = '';
+  dynamic _afterHot;
+  dynamic _afterNew;
+  dynamic _afterRising;
 
   // Getters encapsulated so they cannot be modified from outside.
   List<DataModel> get hotArticles => List<DataModel>.from(_hotArticles);
@@ -46,6 +46,7 @@ class ArticleProvider extends ChangeNotifier {
 
   Future<void> fetchRisingArticles() async {
     final DataRepository dataRepository = DataRepository();
+
     final risingArticles =
         await dataRepository.getData('rising', afterValue: _afterRising);
     _risingArticles.addAll(risingArticles);

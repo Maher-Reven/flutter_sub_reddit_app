@@ -25,12 +25,6 @@ class _HomePageState extends State<HomePage>
     _tabController.addListener(() {
       setState(() {});
     });
-    // scrollController.addListener(() {
-    //   if (scrollController.position.maxScrollExtent ==
-    //       scrollController.offset) {
-    //     articleProvider.initModels();
-    //   }
-    // });
   }
 
   @override
