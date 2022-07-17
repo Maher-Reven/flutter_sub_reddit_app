@@ -8,28 +8,28 @@ class ArticleProvider extends ChangeNotifier {
   final List<DataModel> _hotArticles = [];
   final List<DataModel> _newArticles = [];
   final List<DataModel> _risingArticles = [];
-  LoadingState _isLoadingHotArticles = LoadingState.loading;
-  LoadingState _isLoadingNewArticles = LoadingState.loading;
-  LoadingState _isLoadingRisingArticles = LoadingState.loading;
-  dynamic _afterHot;
-  dynamic _afterNew;
-  dynamic _afterRising;
+  LoadingState _hotArticlesLoadingState = LoadingState.loading;
+  LoadingState _newArticlesLoadingState = LoadingState.loading;
+  LoadingState _risingArticlesLoadingState = LoadingState.loading;
+  String _afterHot = '';
+  String _afterNew = '';
+  String _afterRising = '';
 
   // Getters encapsulated so they cannot be modified from outside.
   List<DataModel> get hotArticles => List<DataModel>.from(_hotArticles);
   List<DataModel> get newArticles => List<DataModel>.from(_newArticles);
   List<DataModel> get risingArticles => List<DataModel>.from(_risingArticles);
 
-  LoadingState get isLoadingHotArticles => _isLoadingHotArticles;
-  LoadingState get isLoadingNewArticles => _isLoadingNewArticles;
-  LoadingState get isLoadingRisingArticles => _isLoadingRisingArticles;
+  LoadingState get hotArticlesLoadingState => _hotArticlesLoadingState;
+  LoadingState get newArticlesLoadingState => _newArticlesLoadingState;
+  LoadingState get risingArticlesLoadingState => _risingArticlesLoadingState;
 
   Future<void> fetchHotArticles() async {
     final DataRepository dataRepository = DataRepository();
     final hotArticles =
         await dataRepository.getData('hot', afterValue: _afterHot);
     _hotArticles.addAll(hotArticles);
-    _isLoadingHotArticles = LoadingState.loaded;
+    _hotArticlesLoadingState = LoadingState.loaded;
     _afterHot = hotArticles.last.after;
     notifyListeners();
   }
@@ -39,7 +39,7 @@ class ArticleProvider extends ChangeNotifier {
     final newArticles =
         await dataRepository.getData('new', afterValue: _afterNew);
     _newArticles.addAll(newArticles);
-    _isLoadingNewArticles = LoadingState.loaded;
+    _newArticlesLoadingState = LoadingState.loaded;
     _afterNew = newArticles.last.after;
     notifyListeners();
   }
@@ -50,7 +50,7 @@ class ArticleProvider extends ChangeNotifier {
     final risingArticles =
         await dataRepository.getData('rising', afterValue: _afterRising);
     _risingArticles.addAll(risingArticles);
-    _isLoadingRisingArticles = LoadingState.loaded;
+    _risingArticlesLoadingState = LoadingState.loaded;
     _afterRising = risingArticles.last.after;
     notifyListeners();
   }
@@ -62,12 +62,30 @@ class ArticleProvider extends ChangeNotifier {
   }
 
   void refresh() {
-    _isLoadingHotArticles = LoadingState.loading;
-    _isLoadingNewArticles = LoadingState.loading;
-    _isLoadingRisingArticles = LoadingState.loading;
+    _hotArticlesLoadingState = LoadingState.loading;
+    _newArticlesLoadingState = LoadingState.loading;
+    _risingArticlesLoadingState = LoadingState.loading;
     notifyListeners();
     fetchHotArticles();
     fetchNewArticles();
     fetchRisingArticles();
+  }
+
+  Future<void> loadMoreHotArticles() async {
+    _hotArticlesLoadingState = LoadingState.loadMore;
+    notifyListeners();
+    await fetchHotArticles();
+  }
+
+  Future<void> loadMoreNewArticles() async {
+    _newArticlesLoadingState = LoadingState.loadMore;
+    notifyListeners();
+    await fetchNewArticles();
+  }
+
+  Future<void> loadMoreRisingArticles() async {
+    _risingArticlesLoadingState = LoadingState.loadMore;
+    notifyListeners();
+    await fetchRisingArticles();
   }
 }

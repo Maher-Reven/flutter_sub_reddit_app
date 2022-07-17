@@ -13,16 +13,16 @@ class Category {
 }
 
 class CategoryData {
-  CategoryData({required this.children, required this.after});
+  CategoryData({
+    required this.children,
+  });
   final List<Article> children;
-  final dynamic after;
   factory CategoryData.fromJson(Map<String, dynamic> json) => CategoryData(
-        after: json['after'],
         children: List<Article>.from(
           json["children"].map(
             (x) => Article.fromJson(
               x,
-              json['after'],
+              json['after'] ?? '',
             ),
           ),
         ),
@@ -38,7 +38,7 @@ class Article {
   final String kind;
   final DataModel data;
 
-  factory Article.fromJson(Map<String, dynamic> json, dynamic after) => Article(
+  factory Article.fromJson(Map<String, dynamic> json, String after) => Article(
         kind: json["kind"],
         data: DataModel.fromServerMap(json["data"], after),
       );
@@ -49,7 +49,7 @@ class DataModel {
   final String body;
   final String url;
   final DateTime creationTime;
-  final dynamic after;
+  final String after;
 
   DataModel({
     required this.title,
@@ -59,7 +59,7 @@ class DataModel {
     required this.after,
   });
 
-  factory DataModel.fromServerMap(Map<String, dynamic> json, dynamic after) {
+  factory DataModel.fromServerMap(Map<String, dynamic> json, String after) {
     return DataModel(
       title: json['title'] ?? '',
       body: json['selftext'] ?? '',

@@ -37,35 +37,41 @@ class _HomePageState extends State<HomePage>
     return <Widget>[
       RefreshIndicator(
         onRefresh: refresh,
-        child:
-            articleProviderStream.isLoadingHotArticles == LoadingState.loading
-                ? const Center(child: CircularProgressIndicator())
-                : ArticlesTab(
-                    dataModels: articleProvider.hotArticles,
-                    loadMore: loadMore,
-                    articlesType: 'Hot',
-                  ),
+        child: articleProviderStream.hotArticlesLoadingState ==
+                LoadingState.loading
+            ? const Center(child: CircularProgressIndicator())
+            : ArticlesTab(
+                dataModels: articleProvider.hotArticles,
+                loadMore: loadMore,
+                articlesType: 'Hot',
+                isLoading: articleProvider.hotArticlesLoadingState ==
+                    LoadingState.loadMore,
+              ),
       ),
       RefreshIndicator(
         onRefresh: refresh,
-        child:
-            articleProviderStream.isLoadingNewArticles == LoadingState.loading
-                ? const Center(child: CircularProgressIndicator())
-                : ArticlesTab(
-                    dataModels: articleProvider.newArticles,
-                    loadMore: loadMore,
-                    articlesType: 'New',
-                  ),
+        child: articleProviderStream.newArticlesLoadingState ==
+                LoadingState.loading
+            ? const Center(child: CircularProgressIndicator())
+            : ArticlesTab(
+                dataModels: articleProvider.newArticles,
+                loadMore: loadMore,
+                articlesType: 'New',
+                isLoading: articleProvider.newArticlesLoadingState ==
+                    LoadingState.loadMore,
+              ),
       ),
       RefreshIndicator(
         onRefresh: refresh,
-        child: articleProviderStream.isLoadingRisingArticles ==
+        child: articleProviderStream.risingArticlesLoadingState ==
                 LoadingState.loading
             ? const Center(child: CircularProgressIndicator())
             : ArticlesTab(
                 dataModels: articleProvider.risingArticles,
                 loadMore: loadMore,
                 articlesType: 'Rising',
+                isLoading: articleProvider.risingArticlesLoadingState ==
+                    LoadingState.loadMore,
               ),
       ),
     ];
@@ -78,22 +84,23 @@ class _HomePageState extends State<HomePage>
   Future<void> loadMore(String type) async {
     switch (type) {
       case 'Hot':
-        if (articleProvider.isLoadingHotArticles == LoadingState.loading) {
+        if (articleProvider.hotArticlesLoadingState == LoadingState.loading) {
           return;
         }
-        await articleProvider.fetchHotArticles();
+        await articleProvider.loadMoreHotArticles();
         return;
       case 'New':
-        if (articleProvider.isLoadingNewArticles == LoadingState.loading) {
+        if (articleProvider.newArticlesLoadingState == LoadingState.loading) {
           return;
         }
-        await articleProvider.fetchNewArticles();
+        await articleProvider.loadMoreNewArticles();
         return;
       case 'Rising':
-        if (articleProvider.isLoadingRisingArticles == LoadingState.loading) {
+        if (articleProvider.risingArticlesLoadingState ==
+            LoadingState.loading) {
           return;
         }
-        await articleProvider.fetchRisingArticles();
+        await articleProvider.loadMoreRisingArticles();
         return;
       default:
         return;
