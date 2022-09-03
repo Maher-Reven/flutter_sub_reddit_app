@@ -19,7 +19,13 @@ class CategoryData {
   final List<Article> children;
   factory CategoryData.fromJson(Map<String, dynamic> json) => CategoryData(
         children: List<Article>.from(
-            json["children"].map((x) => Article.fromJson(x))),
+          json["children"].map(
+            (x) => Article.fromJson(
+              x,
+              json['after'] ?? '',
+            ),
+          ),
+        ),
       );
 }
 
@@ -32,9 +38,9 @@ class Article {
   final String kind;
   final DataModel data;
 
-  factory Article.fromJson(Map<String, dynamic> json) => Article(
+  factory Article.fromJson(Map<String, dynamic> json, String after) => Article(
         kind: json["kind"],
-        data: DataModel.fromServerMap(json["data"]),
+        data: DataModel.fromServerMap(json["data"], after),
       );
 }
 
@@ -42,21 +48,25 @@ class DataModel {
   final String title;
   final String body;
   final String url;
-  // final DateTime creationTime;
+  final DateTime creationTime;
+  final String after;
 
   DataModel({
     required this.title,
     required this.body,
     required this.url,
-    // required this.creationTime,
+    required this.creationTime,
+    required this.after,
   });
 
-  factory DataModel.fromServerMap(Map<String, dynamic> json) {
+  factory DataModel.fromServerMap(Map<String, dynamic> json, String after) {
     return DataModel(
       title: json['title'] ?? '',
       body: json['selftext'] ?? '',
       url: json['url'] ?? '',
-      // creationTime: DateTime.parse(json['created_utc']),
+      creationTime: DateTime.fromMillisecondsSinceEpoch(
+          json['created_utc'].toInt() * 1000),
+      after: after,
     );
   }
 }
